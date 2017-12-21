@@ -1,0 +1,49 @@
+## Introduction
+
+Project `ArcticFoodWebScraping` was created to scrape data for the ongoing ArcticFood project.
+
+Based on the output log file (`info.log`), the script ran from 10:09PM to 1:32AM on `gistest` server, taking ~3.5 hours.
+
+### Viewing the sqlite database
+  - either install [`DB Browser for SQLite`](http://sqlitebrowser.org/) to view it offline on your computer,
+  - or view it online (sql query support): https://gistest.usask.ca/ArcticFoodWebScraping/viewer/?url=https://gistest.usask.ca/ArcticFoodWebScraping/data.db
+
+## Summary
+- Database name: `data.db`
+- Table name: `statcan_chapter3`
+- Total records: 55,641
+- Number of years: 1988-2017 (30 years)
+- Number of countries:
+  - There are 270 countries included in StatCan's database,
+  - but only 268 contains valid data from 1988-2017 (may not necessarily have data for all the 30 years
+      - times of scanning: 270 * 30 = 8100
+      - theoretical data records: 268 * 30 = 8040
+      - actual records: 4464
+      ```sql
+      -- countries having data: 268
+      select count(0)
+      	from (
+      	select distinct country
+      		from statcan_chapter3
+      		order by country
+      	)
+
+      -- unique (country, year) combinations: 4464
+      select count(0)
+      	from (
+      	select distinct country, year
+      		from statcan_chapter3
+      		order by country, year
+      	)
+      ```
+
+- Types commodity: 258
+```sql
+-- unique commodity types: 258
+select count(0)
+	from (
+	select distinct commodity
+		from statcan_chapter3
+		order by commodity
+	)
+```
